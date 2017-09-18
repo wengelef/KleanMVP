@@ -24,13 +24,16 @@ import javax.inject.Inject
 
 class UserInteractorImpl @Inject constructor(private val userRepository: UserRepository) : UserInteractor {
 
-    override fun getUsers(predicate: (user: UserEntity) -> Boolean): Observable<DomainState<List<UserEntity>>> {
+    private val userEntityMapper: (UserEntity) -> User = { userEntity -> User(userEntity.name, userEntity.avatarUrl, userEntity.avatarUrl) }
+
+    override fun getUsers(predicate: (user: User) -> Boolean): Observable<DomainState<List<User>>> {
         return userRepository.getUsers()
                 .map { dataState ->
                     when (dataState) {
-                        is DataState.Valid -> DomainState.Valid(dataState.data.filter(predicate))
-                        is DataState.Invalid -> DomainState.Invalid<List<UserEntity>>(dataState.reason)
+                        is DataState.Success -> { DomainState.Valid(dataState.data.map(userEntityMapper).filter(predicate)) }
+                        is DataState.Failure -> DomainState.Invalid<List<User>>(dataState.reason)
                     }
                 }
     }
 }
+

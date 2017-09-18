@@ -22,12 +22,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.wengelef.kleanmvp.R
-import com.wengelef.kleanmvp.data.UserEntity
 import kotlinx.android.synthetic.main.item_user.view.*
 
 class UsersAdapter : RecyclerView.Adapter<UsersAdapter.UserViewHolder>() {
 
-    var users: List<UserEntity> = emptyList()
+    var users: List<UserViewModel> = emptyList()
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.itemView.name.text = users[position].name

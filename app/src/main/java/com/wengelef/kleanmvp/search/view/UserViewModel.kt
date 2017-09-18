@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-package com.wengelef.kleanmvp.data
+package com.wengelef.kleanmvp.search.view
 
-sealed class DataState<DataType> : State {
-    data class Success<DataType>(val data: DataType) : DataState<DataType>()
-    data class Failure<DataType>(val reason: String) : DataState<DataType>()
-}
+data class UserViewModel(val name: String, val avatarUrl: String, val htmlUrl: String)

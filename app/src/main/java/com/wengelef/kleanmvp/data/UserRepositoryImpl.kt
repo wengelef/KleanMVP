@@ -30,6 +30,6 @@ class UserRepositoryImpl @Inject constructor(
                         .doOnNext { users -> userDB.saveUsers(users) })
                 .filter { users -> users.isNotEmpty() }
                 .firstElement().toObservable()
-                .flatMap { Observable.just(DataState.Valid(it)) }
+                .flatMap { Observable.just(DataState.Success(it)) }
     }
 }
