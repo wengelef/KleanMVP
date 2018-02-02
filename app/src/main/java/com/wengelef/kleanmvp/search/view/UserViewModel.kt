@@ -16,4 +16,4 @@
 
 package com.wengelef.kleanmvp.search.view
 
-data class UserViewModel(val name: String, val avatarUrl: String, val htmlUrl: String)
+data class UserViewModel(val name: String, val avatarUrl: String, val htmlUrl: String, val isFollowing: Boolean)

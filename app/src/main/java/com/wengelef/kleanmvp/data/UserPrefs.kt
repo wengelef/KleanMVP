@@ -51,18 +51,7 @@ class UserPrefs(context: Context, private val gson: Gson) : UserDb {
                 .firstOrError().toObservable()
     }
 
-    override fun saveUser(user: UserEntity): Observable<UserEntity> {
-        return getUsers()
-                .map { userEntities ->
-                    val mutableUsers = userEntities.toMutableList()
-                    val index = mutableUsers.indexOfFirst { userEntity -> userEntity.id == user.id }
-                    if (index == -1) {
-                        mutableUsers.add(user)
-                    } else {
-                        mutableUsers[index] = user
-                    }
-                    saveUsers(mutableUsers)
-                    user
-                }
+    override fun followUser(userId: Long, following: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

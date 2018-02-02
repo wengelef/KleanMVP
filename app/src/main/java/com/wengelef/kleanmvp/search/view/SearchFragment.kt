@@ -48,6 +48,8 @@ class SearchFragment : Fragment(), SearchView {
         users_recycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         users_recycler.adapter = usersAdapter
 
+        users_recycler.setHasFixedSize(true)
+
         presenter.start(this)
     }
 

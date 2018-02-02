@@ -23,5 +23,5 @@ interface UserDb {
     fun getFollowedUsers(): Observable<List<UserEntity>>
     fun saveUsers(users: List<UserEntity>)
     fun getUserForName(name: String): Observable<UserEntity>
-    fun saveUser(user: UserEntity): Observable<UserEntity>
+    fun followUser(userId: Long, following: Boolean)
 }

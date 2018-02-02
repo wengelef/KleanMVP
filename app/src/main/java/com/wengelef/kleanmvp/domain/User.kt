@@ -16,4 +16,4 @@
 
 package com.wengelef.kleanmvp.domain
 
-data class User(val name: String, val avatarUrl: String, val htmlUrl: String)
+data class User(val name: String, val avatarUrl: String, val htmlUrl: String, val isFollowing: Boolean)

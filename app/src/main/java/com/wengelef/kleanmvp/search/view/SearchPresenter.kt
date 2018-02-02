@@ -28,30 +28,37 @@ import javax.inject.Inject
 
 class SearchPresenter @Inject constructor(private val userInteractor: UserInteractor) : Presenter<SearchView> {
 
-    private val userModelMapper: (User) -> UserViewModel = { user -> UserViewModel(user.name, user.avatarUrl, user.htmlUrl) }
-
-    private val userViewModelMapper: (UserViewModel) -> User = { userViewModel -> User(userViewModel.name, userViewModel.avatarUrl, userViewModel.htmlUrl) }
+    private val userModelMapper: (User) -> UserViewModel = { user -> UserViewModel(user.name, user.avatarUrl, user.htmlUrl, user.isFollowing) }
+    private val userViewModelMapper: (UserViewModel) -> User = { userViewModel -> User(userViewModel.name, userViewModel.avatarUrl, userViewModel.htmlUrl, userViewModel.isFollowing) }
 
     private val disposables = CompositeDisposable()
 
     override fun start(view: SearchView) {
-        disposables.add(Observable.concat(
-                userInteractor.getUsers({ user: User -> user.name.isNotBlank() }),
-                view.searchInputChanges()
-                        .flatMap { userInteractor.getUsers({ user -> user.name.startsWith(it, true) }) })
+        disposables.add(view.searchInputChanges()
+                .flatMap {
+                    userInteractor.getUsers({ user -> user.name.startsWith(it, true) })
+                        .firstOrError().toObservable()
+                }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { state ->
-                    Timber.i("$state")
                     when (state) {
                         is DomainState.Valid -> view.showUsers(state.data.map(userModelMapper))
                         is DomainState.Invalid -> view.showError(state.reason)
                     }
                 })
 
-        view.userClicks()
+        disposables.add(userInteractor.getUsers({ user: User -> user.name.isNotBlank() })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { usersState ->
+                    when (usersState) {
+                        is DomainState.Valid -> view.showUsers(usersState.data.map(userModelMapper))
+                        is DomainState.Invalid -> view.showError(usersState.reason)
+                    }
+                })
+
+        disposables.add(view.userClicks()
                 .map(userViewModelMapper)
-                .flatMap { user -> userInteractor.followUser(user) }
-                .subscribe { Timber.i("Followed User $it") }
+                .subscribe { user -> userInteractor.followUser(user) })
     }
 
     override fun destroy() {

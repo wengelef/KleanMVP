@@ -31,7 +31,6 @@ class UserRepositoryImpl @Inject constructor(
                 userService.getUsers().subscribeOn(Schedulers.io())
                         .doOnNext { users -> userDB.saveUsers(users) })
                 .filter { users -> users.isNotEmpty() }
-                .firstElement().toObservable()
                 .flatMap { Observable.just(DataState.Success(it) as DataState<List<UserEntity>>) }
                 .onErrorResumeNext { error: Throwable -> Observable.just(DataState.Failure("An Error Occurred")) }
     }
@@ -40,12 +39,10 @@ class UserRepositoryImpl @Inject constructor(
         // todo look up via service when DB has no element
         return userDB.getUserForName(name)
                 .firstElement().toObservable()
-                .flatMap { Observable.just(DataState.Success(it)) }
+                .map { DataState.Success(it) }
     }
 
-    override fun saveUser(user: UserEntity): Observable<DataState<UserEntity>> {
-        return userDB.saveUser(user)
-                .firstElement().toObservable()
-                .flatMap { Observable.just(DataState.Success(it)) }
+    override fun followUser(userId: Long, following: Boolean) {
+        userDB.followUser(userId, following)
     }
 }

@@ -43,6 +43,11 @@ class UsersAdapter : RecyclerView.Adapter<UsersAdapter.UserViewHolder>() {
                 .dontAnimate()
                 .centerCrop()
                 .into(holder.itemView.imageView)
+
+        holder.itemView.star.visibility = when (users[position].isFollowing) {
+            true -> View.VISIBLE
+            false -> View.INVISIBLE
+        }
     }
 
     override fun getItemCount(): Int = users.size

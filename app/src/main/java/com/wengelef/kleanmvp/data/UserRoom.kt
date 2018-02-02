@@ -20,11 +20,11 @@ import io.reactivex.Observable
 
 class UserRoom(private val userDao: UserDao) : UserDb {
     override fun getUsers(): Observable<List<UserEntity>> {
-        return userDao.getUsers().first(emptyList()).toObservable()
+        return userDao.getUsers().toObservable()
     }
 
     override fun getFollowedUsers(): Observable<List<UserEntity>> {
-        return userDao.getFollowedUsers().first(emptyList()).toObservable()
+        return userDao.getFollowedUsers().toObservable()
     }
 
     override fun saveUsers(users: List<UserEntity>) {
@@ -35,8 +35,7 @@ class UserRoom(private val userDao: UserDao) : UserDb {
         return userDao.getUserForName(name).firstElement().toObservable()
     }
 
-    override fun saveUser(user: UserEntity): Observable<UserEntity> {
-        userDao.saveUser(user)
-        return userDao.getUserForName(user.name).toObservable()
+    override fun followUser(userId: Long, following: Boolean) {
+        userDao.followUser(userId, following)
     }
 }

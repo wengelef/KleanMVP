@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class UserInteractorImpl @Inject constructor(private val userRepository: UserRepository) : UserInteractor {
 
-    private val userEntityMapper: (UserEntity) -> User = { userEntity -> User(userEntity.name, userEntity.avatarUrl, userEntity.avatarUrl) }
+    private val userEntityMapper: (UserEntity) -> User = { userEntity -> User(userEntity.name, userEntity.avatarUrl, userEntity.avatarUrl, userEntity.isFollowing) }
 
     override fun getUsers(predicate: (user: User) -> Boolean): Observable<DomainState<List<User>>> {
         return userRepository.getUsers()
@@ -36,18 +36,11 @@ class UserInteractorImpl @Inject constructor(private val userRepository: UserRep
                 }
     }
 
-    override fun followUser(user: User): Observable<DomainState<Boolean>> {
-        return userRepository.getUserForName(user.name)
-                .flatMap { state: DataState<UserEntity> ->
-                    when (state) {
-                        is DataState.Success -> userRepository.saveUser(state.data.copy(isFollowing = !state.data.isFollowing))
-                        is DataState.Failure -> Observable.just(DataState.Failure(state.reason))
-                    }
-                }
-                .map { state: DataState<UserEntity> ->
-                    when (state) {
-                        is DataState.Success -> DomainState.Valid(state.data.isFollowing)
-                        is DataState.Failure -> DomainState.Invalid<Boolean>(state.reason)
+    override fun followUser(user: User) {
+        userRepository.getUserForName(user.name).firstOrError()
+                .subscribe { dataState ->
+                    when (dataState) {
+                        is DataState.Success -> userRepository.followUser(dataState.data.id, !dataState.data.isFollowing)
                     }
                 }
     }
