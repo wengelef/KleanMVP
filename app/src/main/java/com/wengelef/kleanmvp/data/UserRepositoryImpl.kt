@@ -23,12 +23,28 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
         private val userDB: UserDb,
         private val userService: UserService) : UserRepository {
+
+    // TODO proper error mapping
     override fun getUsers(): Observable<DataState<List<UserEntity>>> {
         return Observable.concat(
                 userDB.getUsers().subscribeOn(Schedulers.computation()),
                 userService.getUsers().subscribeOn(Schedulers.io())
                         .doOnNext { users -> userDB.saveUsers(users) })
                 .filter { users -> users.isNotEmpty() }
+                .firstElement().toObservable()
+                .flatMap { Observable.just(DataState.Success(it) as DataState<List<UserEntity>>) }
+                .onErrorResumeNext { error: Throwable -> Observable.just(DataState.Failure("An Error Occurred")) }
+    }
+
+    override fun getUserForName(name: String): Observable<DataState<UserEntity>> {
+        // todo look up via service when DB has no element
+        return userDB.getUserForName(name)
+                .firstElement().toObservable()
+                .flatMap { Observable.just(DataState.Success(it)) }
+    }
+
+    override fun saveUser(user: UserEntity): Observable<DataState<UserEntity>> {
+        return userDB.saveUser(user)
                 .firstElement().toObservable()
                 .flatMap { Observable.just(DataState.Success(it)) }
     }

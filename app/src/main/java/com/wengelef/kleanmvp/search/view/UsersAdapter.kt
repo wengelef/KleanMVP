@@ -22,15 +22,20 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.wengelef.kleanmvp.R
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.item_user.view.*
 
 class UsersAdapter : RecyclerView.Adapter<UsersAdapter.UserViewHolder>() {
 
     var users: List<UserViewModel> = emptyList()
 
+    val userClicks = PublishSubject.create<UserViewModel>()
+
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.itemView.name.text = users[position].name
         holder.itemView.url.text = users[position].htmlUrl
+
+        holder.itemView.setOnClickListener { userClicks.onNext(users[position]) }
 
         Glide.with(holder.itemView.imageView.context)
                 .load(users[position].avatarUrl)

@@ -23,6 +23,8 @@ interface SearchView : BaseView {
 
     fun searchInputChanges(): Observable<String>
 
+    fun userClicks(): Observable<UserViewModel>
+
     fun showUsers(users: List<UserViewModel>)
     fun showError(error: String)
 }

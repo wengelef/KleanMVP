@@ -23,6 +23,7 @@ import com.google.gson.annotations.SerializedName
 data class UserEntity(
         @SerializedName("login") @ColumnInfo(name = "name") var name: String = "",
         @SerializedName("avatar_url") @ColumnInfo(name = "avatar_url") var avatarUrl: String = "",
-        @SerializedName("html_url") @ColumnInfo(name = "html_url") var htmlUrl: String = "") {
+        @SerializedName("html_url") @ColumnInfo(name = "html_url") var htmlUrl: String = "",
+        @ColumnInfo(name = "following") var isFollowing: Boolean = false) {
     @PrimaryKey(autoGenerate = true) var id: Long = 0L
 }

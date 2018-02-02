@@ -36,4 +36,33 @@ class UserPrefs(context: Context, private val gson: Gson) : UserDb {
     override fun saveUsers(users: List<UserEntity>) {
         db.commit { putString(keyUsers, gson.toJson(users)) }
     }
+
+    override fun getFollowedUsers(): Observable<List<UserEntity>> {
+        return getUsers()
+                .flatMapIterable { it }
+                .filter { it.isFollowing }
+                .toList().toObservable()
+    }
+
+    override fun getUserForName(name: String): Observable<UserEntity> {
+        return getUsers()
+                .flatMapIterable { it }
+                .filter { userEntity -> userEntity.name == name }
+                .firstOrError().toObservable()
+    }
+
+    override fun saveUser(user: UserEntity): Observable<UserEntity> {
+        return getUsers()
+                .map { userEntities ->
+                    val mutableUsers = userEntities.toMutableList()
+                    val index = mutableUsers.indexOfFirst { userEntity -> userEntity.id == user.id }
+                    if (index == -1) {
+                        mutableUsers.add(user)
+                    } else {
+                        mutableUsers[index] = user
+                    }
+                    saveUsers(mutableUsers)
+                    user
+                }
+    }
 }

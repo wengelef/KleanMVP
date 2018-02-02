@@ -59,6 +59,8 @@ class SearchFragment : Fragment(), SearchView {
     override fun searchInputChanges(): Observable<String> = RxTextView.textChanges(editText)
             .map { it.toString() }
 
+    override fun userClicks(): Observable<UserViewModel> = usersAdapter.userClicks
+
     override fun showUsers(users: List<UserViewModel>) {
         usersAdapter.users = users
         usersAdapter.notifyDataSetChanged()

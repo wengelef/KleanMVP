@@ -20,4 +20,6 @@ import io.reactivex.Observable
 
 interface UserRepository {
     fun getUsers(): Observable<DataState<List<UserEntity>>>
+    fun getUserForName(name: String): Observable<DataState<UserEntity>>
+    fun saveUser(user: UserEntity): Observable<DataState<UserEntity>>
 }

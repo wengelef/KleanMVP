@@ -22,26 +22,39 @@ import com.wengelef.kleanmvp.domain.UserInteractor
 import com.wengelef.kleanmvp.mvp.Presenter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 import javax.inject.Inject
 
 class SearchPresenter @Inject constructor(private val userInteractor: UserInteractor) : Presenter<SearchView> {
 
     private val userModelMapper: (User) -> UserViewModel = { user -> UserViewModel(user.name, user.avatarUrl, user.htmlUrl) }
 
+    private val userViewModelMapper: (UserViewModel) -> User = { userViewModel -> User(userViewModel.name, userViewModel.avatarUrl, userViewModel.htmlUrl) }
+
+    private val disposables = CompositeDisposable()
+
     override fun start(view: SearchView) {
-        Observable.merge(
+        disposables.add(Observable.concat(
                 userInteractor.getUsers({ user: User -> user.name.isNotBlank() }),
                 view.searchInputChanges()
                         .flatMap { userInteractor.getUsers({ user -> user.name.startsWith(it, true) }) })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { state ->
+                    Timber.i("$state")
                     when (state) {
                         is DomainState.Valid -> view.showUsers(state.data.map(userModelMapper))
                         is DomainState.Invalid -> view.showError(state.reason)
                     }
-                }
+                })
+
+        view.userClicks()
+                .map(userViewModelMapper)
+                .flatMap { user -> userInteractor.followUser(user) }
+                .subscribe { Timber.i("Followed User $it") }
     }
 
     override fun destroy() {
+        disposables.dispose()
     }
 }

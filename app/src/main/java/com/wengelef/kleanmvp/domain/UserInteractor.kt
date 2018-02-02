@@ -21,5 +21,7 @@ import io.reactivex.Observable
 interface UserInteractor {
 
     fun getUsers(predicate: (user: User) -> Boolean = { true }): Observable<DomainState<List<User>>>
+
+    fun followUser(user: User): Observable<DomainState<Boolean>>
 }
 

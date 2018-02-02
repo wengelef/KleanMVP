@@ -18,6 +18,7 @@ package com.wengelef.kleanmvp.data
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
+import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 
@@ -25,6 +26,14 @@ import io.reactivex.Flowable
 interface UserDao {
     @Query("SELECT * FROM user") fun getUsers(): Flowable<List<UserEntity>>
 
+    @Query("SELECT * FROM user WHERE following IS 'TRUE'") fun getFollowedUsers(): Flowable<List<UserEntity>>
+
     @Insert
     fun saveUsers(users: List<UserEntity>)
+
+    @Query("SELECT * FROM user WHERE name IS :arg0 LIMIT 1")
+    fun getUserForName(name: String): Flowable<UserEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveUser(user: UserEntity): Long
 }

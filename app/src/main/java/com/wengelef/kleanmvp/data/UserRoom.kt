@@ -19,12 +19,24 @@ package com.wengelef.kleanmvp.data
 import io.reactivex.Observable
 
 class UserRoom(private val userDao: UserDao) : UserDb {
-
     override fun getUsers(): Observable<List<UserEntity>> {
         return userDao.getUsers().first(emptyList()).toObservable()
     }
 
+    override fun getFollowedUsers(): Observable<List<UserEntity>> {
+        return userDao.getFollowedUsers().first(emptyList()).toObservable()
+    }
+
     override fun saveUsers(users: List<UserEntity>) {
         userDao.saveUsers(users)
+    }
+
+    override fun getUserForName(name: String): Observable<UserEntity> {
+        return userDao.getUserForName(name).firstElement().toObservable()
+    }
+
+    override fun saveUser(user: UserEntity): Observable<UserEntity> {
+        userDao.saveUser(user)
+        return userDao.getUserForName(user.name).toObservable()
     }
 }
