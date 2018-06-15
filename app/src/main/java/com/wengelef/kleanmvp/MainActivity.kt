@@ -18,7 +18,7 @@ package com.wengelef.kleanmvp
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.wengelef.kleanmvp.search.view.SearchFragment
+import com.wengelef.kleanmvp.signup.SignupFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.ac_main)
 
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, SearchFragment(), "SearchFragment")
+                .add(R.id.fragment_container, SignupFragment(), "SearchFragment")
                 .commit()
     }
 }

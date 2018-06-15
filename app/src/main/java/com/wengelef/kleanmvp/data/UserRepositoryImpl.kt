@@ -21,10 +21,9 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-        private val userDB: UserDb,
         private val userService: UserService) : UserRepository {
 
-    // TODO proper error mapping
+    /*// TODO proper error mapping
     override fun getUsers(): Observable<DataState<List<UserEntity>>> {
         return Observable.concat(
                 userDB.getUsers().subscribeOn(Schedulers.computation()),
@@ -44,5 +43,5 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun followUser(userId: Long, following: Boolean) {
         userDB.followUser(userId, following)
-    }
+    }*/
 }

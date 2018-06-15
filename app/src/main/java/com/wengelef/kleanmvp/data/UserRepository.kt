@@ -19,7 +19,7 @@ package com.wengelef.kleanmvp.data
 import io.reactivex.Observable
 
 interface UserRepository {
-    fun getUsers(): Observable<DataState<List<UserEntity>>>
+    /*fun getUsers(): Observable<DataState<List<UserEntity>>>
     fun getUserForName(name: String): Observable<DataState<UserEntity>>
-    fun followUser(userId: Long, following: Boolean)
+    fun followUser(userId: Long, following: Boolean)*/
 }

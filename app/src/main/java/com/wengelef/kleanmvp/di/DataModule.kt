@@ -28,7 +28,7 @@ import javax.inject.Singleton
 @Singleton
 @Module
 class DataModule {
-
+/*
     @Provides
     @Singleton
     fun provideUserRepository(@Named("Room") userDb: UserDb, userService: UserService): UserRepository {
@@ -55,5 +55,5 @@ class DataModule {
     @Named("Room")
     fun provideUserRoom(appDatabase: AppDatabase): UserDb {
         return UserRoom(appDatabase.userDao())
-    }
+    }*/
 }
