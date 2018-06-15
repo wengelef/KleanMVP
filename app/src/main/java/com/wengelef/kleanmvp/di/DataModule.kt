@@ -16,13 +16,7 @@
 
 package com.wengelef.kleanmvp.di
 
-import android.arch.persistence.room.Room
-import android.content.Context
-import com.google.gson.Gson
-import com.wengelef.kleanmvp.data.*
 import dagger.Module
-import dagger.Provides
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
