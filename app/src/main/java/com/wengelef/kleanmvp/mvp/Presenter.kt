@@ -16,7 +16,7 @@
 
 package com.wengelef.kleanmvp.mvp
 
-interface Presenter<T : BaseView> {
+interface Presenter<in T : BaseView> {
 
     fun start(view: T)
     fun destroy()

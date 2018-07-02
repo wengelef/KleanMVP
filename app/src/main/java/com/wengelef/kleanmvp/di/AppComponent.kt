@@ -16,6 +16,7 @@
 
 package com.wengelef.kleanmvp.di
 
+import com.wengelef.kleanmvp.login.LoginFragment
 import com.wengelef.kleanmvp.signup.SignupFragment
 import dagger.Component
 import javax.inject.Singleton
@@ -24,6 +25,7 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun inject(fragment: SignupFragment)
+    fun inject(fragment: LoginFragment)
 
 }
 
