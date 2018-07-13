@@ -17,31 +17,35 @@
 package com.wengelef.kleanmvp.data
 
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
         private val userService: UserService) : UserRepository {
 
-    /*// TODO proper error mapping
-    override fun getUsers(): Observable<DataState<List<UserEntity>>> {
-        return Observable.concat(
-                userDB.getUsers().subscribeOn(Schedulers.computation()),
-                userService.getUsers().subscribeOn(Schedulers.io())
-                        .doOnNext { users -> userDB.saveUsers(users) })
-                .filter { users -> users.isNotEmpty() }
-                .flatMap { Observable.just(DataState.Success(it) as DataState<List<UserEntity>>) }
-                .onErrorResumeNext { error: Throwable -> Observable.just(DataState.Failure("An Error Occurred")) }
+    sealed class UserCacheState {
+        class Valid(val user: FirebaseUser) : UserCacheState()
+        class Expired : UserCacheState()
     }
 
-    override fun getUserForName(name: String): Observable<DataState<UserEntity>> {
-        // todo look up via service when DB has no element
-        return userDB.getUserForName(name)
-                .firstElement().toObservable()
-                .map { DataState.Success(it) }
+    override fun login(mail: String, pass: String): Observable<UserRepository.LoginDataState> {
+        return userService.login(mail, pass)
+                .map { userResponse ->
+                    when (userResponse) {
+                        is UserService.UserResponse.Success -> UserRepository.LoginDataState.Succes(userResponse.user)
+                        is UserService.UserResponse.Failure -> UserRepository.LoginDataState.Failure(userResponse.throwable)
+                        is UserService.UserResponse.UserNotFound -> UserRepository.LoginDataState.UserNotFound()
+                    }
+                }
     }
 
-    override fun followUser(userId: Long, following: Boolean) {
-        userDB.followUser(userId, following)
-    }*/
+    override fun registerUser(mail: String, pass: String): Observable<UserRepository.SignupDataState> {
+        return userService.register(mail, pass)
+                .map { userResponse ->
+                    when (userResponse) {
+                        is UserService.SignupResponse.Success -> UserRepository.SignupDataState.Succes(userResponse.user)
+                        is UserService.SignupResponse.Failure -> UserRepository.SignupDataState.Failure(userResponse.throwable)
+                        is UserService.SignupResponse.UserExists -> UserRepository.SignupDataState.UserExists()
+                    }
+                }
+    }
 }

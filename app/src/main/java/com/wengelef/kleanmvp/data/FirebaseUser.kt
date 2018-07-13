@@ -16,22 +16,4 @@
 
 package com.wengelef.kleanmvp.data
 
-import io.reactivex.Observable
-
-interface UserRepository {
-
-   sealed class LoginDataState {
-      class Succes(val user: FirebaseUser) : LoginDataState()
-      class UserNotFound : LoginDataState()
-      class Failure(val throwable: Throwable) : LoginDataState()
-   }
-
-   sealed class SignupDataState {
-      class Succes(val user: FirebaseUser) : SignupDataState()
-      class Failure(val throwable: Throwable) : SignupDataState()
-      class UserExists : SignupDataState()
-   }
-
-   fun login(mail: String, pass: String): Observable<LoginDataState>
-   fun registerUser(mail: String, pass: String): Observable<SignupDataState>
-}
+data class FirebaseUser(val displayName: String?, val email: String, val phoneNumber: String?)

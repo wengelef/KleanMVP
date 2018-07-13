@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package com.wengelef.kleanmvp.data
+package com.wengelef.kleanmvp.login.domain
 
 import io.reactivex.Observable
 
-interface UserRepository {
+interface LoginInputValidator {
+    sealed class InputValidation {
+        class Valid(val mail: String, val password: String) : InputValidation()
+        class Invalid : InputValidation()
+    }
 
-   sealed class LoginDataState {
-      class Succes(val user: FirebaseUser) : LoginDataState()
-      class UserNotFound : LoginDataState()
-      class Failure(val throwable: Throwable) : LoginDataState()
-   }
-
-   sealed class SignupDataState {
-      class Succes(val user: FirebaseUser) : SignupDataState()
-      class Failure(val throwable: Throwable) : SignupDataState()
-      class UserExists : SignupDataState()
-   }
-
-   fun login(mail: String, pass: String): Observable<LoginDataState>
-   fun registerUser(mail: String, pass: String): Observable<SignupDataState>
+    fun validateInputs(email: String, pass: String): Observable<InputValidation>
 }

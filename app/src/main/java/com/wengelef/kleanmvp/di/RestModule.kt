@@ -18,6 +18,7 @@ package com.wengelef.kleanmvp.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.wengelef.kleanmvp.data.FirebaseUserService
 import com.wengelef.kleanmvp.data.UserService
 import dagger.Module
 import dagger.Provides
@@ -33,7 +34,7 @@ import javax.inject.Singleton
 @Module
 class RestModule {
 
-    @Provides
+    /*@Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder()
@@ -57,7 +58,7 @@ class RestModule {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return loggingInterceptor
-    }
+    }*/
 
-    @Provides @Singleton fun provideUserService(retrofit: Retrofit): UserService = retrofit.create(UserService::class.java)
+    @Provides @Singleton fun provideUserService(): UserService = FirebaseUserService()
 }

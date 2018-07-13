@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.wengelef.kleanmvp.signup
+package com.wengelef.kleanmvp.signup.domain
 
-import com.wengelef.kleanmvp.data.FirebaseUser
-import com.wengelef.kleanmvp.mvp.BaseView
 import io.reactivex.Observable
 
-interface SignupView : BaseView {
-
-    fun getSignupClicks(): Observable<Any>
-
-    fun getPassInput(): String
-    fun getMailInput(): String
-    fun getTextChanges(): Observable<String>
-
-    fun showSignupSuccess(user: FirebaseUser)
-    fun showError(message: String)
-    fun showProgress(visible: Boolean)
+class SignupInputValidatorImpl : SignupInputValidator {
+    override fun validateInputs(mail: String, pass: String): Observable<SignupInputValidator.InputValidation> {
+        return when {
+            mail.isNotBlank() && pass.isNotBlank() -> Observable.just(SignupInputValidator.InputValidation.Valid(mail, pass))
+            else -> Observable.just(SignupInputValidator.InputValidation.Invalid())
+        }
+    }
 }

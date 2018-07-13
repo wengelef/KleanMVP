@@ -17,6 +17,7 @@
 package com.wengelef.kleanmvp.signup
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +26,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.wengelef.kleanmvp.MainActivity
 import com.wengelef.kleanmvp.R
+import com.wengelef.kleanmvp.data.FirebaseUser
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fr_signup.*
 import javax.inject.Inject
@@ -63,5 +65,17 @@ class SignupFragment : Fragment(), SignupView {
     override fun getTextChanges(): Observable<String> = RxTextView.textChanges(pass_input)
             .mergeWith { RxTextView.text(mail_input) }
             .map { charSequence: CharSequence -> charSequence.toString() }
+
+    override fun showSignupSuccess(user: FirebaseUser) {
+        Snackbar.make(view!!, "${user.email} signed up", Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun showError(message: String) {
+        Snackbar.make(view!!, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun showProgress(visible: Boolean) {
+        progress_bar.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+    }
 }
 

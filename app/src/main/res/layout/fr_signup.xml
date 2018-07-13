@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,7 +13,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorAccent"
+        android:padding="8dp"
+        android:background="@drawable/border"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,6 +36,9 @@
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/mail_input"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -54,17 +57,27 @@
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/pass_input"
+                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/sign_up_button"
-            android:text="Register"
-            android:background="@null"
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:indeterminateOnly="true"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/sign_up_button"
+            android:text="REGISTER"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"/>
 
     </LinearLayout>
 

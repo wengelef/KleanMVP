@@ -16,12 +16,19 @@
 
 package com.wengelef.kleanmvp.di
 
+import com.wengelef.kleanmvp.data.UserRepository
+import com.wengelef.kleanmvp.data.UserRepositoryImpl
+import com.wengelef.kleanmvp.data.UserService
 import dagger.Module
+import dagger.Provides
 import javax.inject.Singleton
 
 @Singleton
 @Module
 class DataModule {
+
+    @Provides @Singleton fun provideUserRepository(userService: UserService): UserRepository = UserRepositoryImpl(userService)
+
 /*
     @Provides
     @Singleton

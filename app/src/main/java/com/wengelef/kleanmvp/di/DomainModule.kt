@@ -16,15 +16,35 @@
 
 package com.wengelef.kleanmvp.di
 
+import com.wengelef.kleanmvp.data.UserRepository
+import com.wengelef.kleanmvp.login.domain.FirebaseLoginInteractor
+import com.wengelef.kleanmvp.login.domain.LoginInputValidator
+import com.wengelef.kleanmvp.login.domain.LoginInputValidatorImpl
+import com.wengelef.kleanmvp.login.domain.LoginInteractor
+import com.wengelef.kleanmvp.signup.domain.SignupInputValidator
+import com.wengelef.kleanmvp.signup.domain.SignupInputValidatorImpl
+import com.wengelef.kleanmvp.signup.domain.SignupInteractor
+import com.wengelef.kleanmvp.signup.domain.SignupInteractorImpl
 import dagger.Module
+import dagger.Provides
 import javax.inject.Singleton
 
 @Singleton @Module
 class DomainModule {
-/*
+
+    @Provides @Singleton fun provideLoginInputValidator(): LoginInputValidator = LoginInputValidatorImpl()
+
+    @Provides @Singleton fun provideSignupInputValidator(): SignupInputValidator = SignupInputValidatorImpl()
+
     @Provides
     @Singleton
-    fun provideUserInteractor(userRepository: UserRepository): UserInteractor {
-        return UserInteractorImpl(userRepository)
-    }*/
+    fun provideLoginInteractor(userRepository: UserRepository, loginInputValidator: LoginInputValidator): LoginInteractor {
+        return FirebaseLoginInteractor(userRepository, loginInputValidator)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignupInteractor(userRepository: UserRepository, signupInputValidator: SignupInputValidator): SignupInteractor {
+        return SignupInteractorImpl(userRepository, signupInputValidator)
+    }
 }

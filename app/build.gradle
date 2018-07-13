@@ -57,4 +57,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-auth:16.0.2'
 }
+
+apply plugin: 'com.google.gms.google-services'
