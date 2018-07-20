@@ -29,6 +29,7 @@ import com.wengelef.kleanmvp.R
 import com.wengelef.kleanmvp.data.FirebaseUser
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fr_signup.*
+import com.wengelef.kleanmvp.signup.SignupView.SignupViewState as SignupViewState
 import javax.inject.Inject
 
 class SignupFragment : Fragment(), SignupView {
@@ -66,16 +67,13 @@ class SignupFragment : Fragment(), SignupView {
             .mergeWith { RxTextView.text(mail_input) }
             .map { charSequence: CharSequence -> charSequence.toString() }
 
-    override fun showSignupSuccess(user: FirebaseUser) {
-        Snackbar.make(view!!, "${user.email} signed up", Snackbar.LENGTH_SHORT).show()
-    }
-
-    override fun showError(message: String) {
-        Snackbar.make(view!!, message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    override fun showProgress(visible: Boolean) {
-        progress_bar.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+    override fun updateUI(viewState: SignupViewState) {
+        progress_bar.visibility = View.INVISIBLE
+        when (viewState) {
+            is SignupViewState.Success -> Snackbar.make(view!!, "${viewState.user.email} signed up", Snackbar.LENGTH_SHORT).show()
+            is SignupViewState.Progress -> progress_bar.visibility = if (viewState.visible) View.VISIBLE else View.INVISIBLE
+            is SignupViewState.Error -> Snackbar.make(view!!, viewState.message, Snackbar.LENGTH_SHORT).show()
+        }
     }
 }
 

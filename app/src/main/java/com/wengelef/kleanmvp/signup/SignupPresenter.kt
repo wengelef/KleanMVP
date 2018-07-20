@@ -29,14 +29,15 @@ class SignupPresenter @Inject constructor(private val signupInteractor: SignupIn
         disposables.add(view.getSignupClicks()
                 .map { view.getMailInput() to view.getPassInput() }
                 .flatMap { (mail, pass) -> signupInteractor.signupUser(mail, pass) }
-                .subscribe { signupState ->
-                    view.showProgress(signupState is SignupInteractor.SignupState.Progress)
+                .map { signupState ->
                     when (signupState) {
-                        is SignupInteractor.SignupState.Success -> view.showSignupSuccess(signupState.user)
-                        is SignupInteractor.SignupState.Failure -> view.showError("Signup failed : ${signupState.message}")
-                        is SignupInteractor.SignupState.InvalidInput -> view.showError("Invalid Input")
+                        is SignupInteractor.SignupState.Success -> SignupView.SignupViewState.Success(signupState.user)
+                        is SignupInteractor.SignupState.Failure -> SignupView.SignupViewState.Error("Signup failed : ${signupState.message}")
+                        is SignupInteractor.SignupState.InvalidInput -> SignupView.SignupViewState.Error("Invalid Input")
+                        is SignupInteractor.SignupState.Progress -> SignupView.SignupViewState.Progress(true)
                     }
                 }
+                .subscribe { signupState -> view.updateUI(signupState) }
         )
     }
 

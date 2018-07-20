@@ -26,9 +26,9 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.wengelef.kleanmvp.MainActivity
 import com.wengelef.kleanmvp.R
-import com.wengelef.kleanmvp.data.FirebaseUser
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fr_login.*
+import com.wengelef.kleanmvp.login.LoginView.LoginViewState as LoginViewState
 import javax.inject.Inject
 
 class LoginFragment : Fragment(), LoginView {
@@ -64,15 +64,12 @@ class LoginFragment : Fragment(), LoginView {
     override fun getTextChanges(): Observable<String> = RxTextView.textChanges(pass_input).mergeWith { RxTextView.textChanges(mail_input) }
             .map { charSequence -> charSequence.toString() }
 
-    override fun showLoginSuccess(user: FirebaseUser) {
-        Snackbar.make(view!!, "${user.email} logged in", Snackbar.LENGTH_SHORT).show()
-    }
-
-    override fun showProgress(visible: Boolean) {
-        progress_bar.visibility = if (visible) View.VISIBLE else View.INVISIBLE
-    }
-
-    override fun showError(message: String) {
-        Snackbar.make(view!!, message, Snackbar.LENGTH_SHORT).show()
+    override fun updateUI(viewState: LoginView.LoginViewState) {
+        progress_bar.visibility = View.INVISIBLE
+        when (viewState) {
+            is LoginViewState.Success -> Snackbar.make(view!!, "${viewState.user.email} logged in", Snackbar.LENGTH_SHORT).show()
+            is LoginViewState.Progress -> progress_bar.visibility = if (viewState.visible) View.VISIBLE else View.INVISIBLE
+            is LoginViewState.Error -> Snackbar.make(view!!, viewState.message, Snackbar.LENGTH_SHORT).show()
+        }
     }
 }

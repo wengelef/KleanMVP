@@ -22,13 +22,17 @@ import io.reactivex.Observable
 
 interface SignupView : BaseView {
 
+    sealed class SignupViewState {
+        class Success(val user: FirebaseUser) : SignupViewState()
+        class Progress(val visible: Boolean) : SignupViewState()
+        class Error(val message: String) : SignupViewState()
+    }
+
     fun getSignupClicks(): Observable<Any>
 
     fun getPassInput(): String
     fun getMailInput(): String
     fun getTextChanges(): Observable<String>
 
-    fun showSignupSuccess(user: FirebaseUser)
-    fun showError(message: String)
-    fun showProgress(visible: Boolean)
+    fun updateUI(viewState: SignupViewState)
 }
